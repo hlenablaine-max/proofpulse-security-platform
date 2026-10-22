@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Globe, GitPullRequest, Cloud, ShieldCheck, Ban, Radar, Zap, Brain, RefreshCw,
   Activity, CheckCircle2, Wrench, Server, Network, Lock, Headphones, Scale, ArrowRight,
@@ -57,8 +57,8 @@ function Header() {
           <a href="#precos" className="hover:text-foreground">Preços</a>
         </nav>
         <div className="flex gap-2">
-          <a href="#cta" className={`${btnOutline} hidden sm:inline-flex`}>Demo</a>
-          <a href="#cta" className={btnSolid}>Começar teste</a>
+          <Link to="/auth" className={`${btnOutline} hidden sm:inline-flex`}>Entrar</Link>
+          <Link to="/auth" className={btnSolid}>Começar teste</Link>
         </div>
       </div>
     </header>
@@ -76,7 +76,7 @@ function Hero() {
       <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
         Proteja todo o seu stack com pentest autônomo. Encontre e corrija vulnerabilidades 24/7.
       </p>
-      <div className="mt-9"><a href="#cta" className={btnSolid}>Começar teste</a></div>
+      <div className="mt-9"><Link to="/auth" className={btnSolid}>Começar teste</Link></div>
       <p className="mt-20 text-xs text-subtle">Usado por times de segurança em</p>
       <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-4">
         {logos.map((l) => (
@@ -424,7 +424,7 @@ function CTA() {
       <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-5xl">Teste sua aplicação hoje.</h2>
       <p className="mt-4 text-muted-foreground">Configuração em minutos, resultado instantâneo.</p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="#" className={btnSolid}>Rodar um pentest</a>
+        <Link to="/auth" className={btnSolid}>Rodar um pentest</Link>
         <a href="#precos" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">Ver preços <ArrowRight size={14} /></a>
       </div>
     </Section>
