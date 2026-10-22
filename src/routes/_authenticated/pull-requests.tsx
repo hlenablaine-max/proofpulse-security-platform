@@ -33,6 +33,7 @@ function PRs() {
             </div>
           </div>
         ))}
+        {data.length === 0 && <p className="px-5 py-10 text-center text-sm text-muted-foreground">Nenhuma pull request analisada. A integração com GitHub ainda não está conectada.</p>}
       </Panel>
     </div>
   );

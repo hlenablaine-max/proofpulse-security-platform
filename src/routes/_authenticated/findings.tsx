@@ -42,7 +42,7 @@ function Findings() {
             </div>
           </Link>
         ))}
-        {rows.length === 0 && <p className="px-5 py-8 text-center text-sm text-muted-foreground">Nenhum achado.</p>}
+        {rows.length === 0 && <p className="px-5 py-8 text-center text-sm text-muted-foreground">Nenhum achado ainda. Execute um pentest para começar.</p>}
       </Panel>
     </div>
   );
