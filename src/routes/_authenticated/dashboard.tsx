@@ -51,7 +51,7 @@ function Overview() {
                 <div key={s} className="flex items-center gap-3 text-sm">
                   <span className="w-16 text-muted-foreground">{sevLabel[s]}</span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                    <div className={`h-full rounded-full bg-${s === "low" ? "subtle" : s}`} style={{ width: `${pct}%` }} />
+                    <div className={`h-full rounded-full ${bar[s]}`} style={{ width: `${pct}%` }} />
                   </div>
                   <span className="w-6 text-right font-mono text-xs">{n}</span>
                 </div>
@@ -87,6 +87,8 @@ function Overview() {
     </div>
   );
 }
+
+const bar = { critical: "bg-critical", high: "bg-high", medium: "bg-medium", low: "bg-subtle" };
 
 function Stat({ label, value, hint, sev }: { label: string; value: string; hint?: string; sev?: Sev }) {
   return (
