@@ -362,6 +362,37 @@ function Ethics() {
   );
 }
 
+function BugBounty() {
+  const companies = ["Google", "Microsoft", "Meta", "Apple", "GitHub", "Shopify", "Uber", "PayPal"];
+  const platforms = [["HackerOne", "Global"], ["Bugcrowd", "Global"], ["Intigriti", "Europa"], ["BugHunt", "Brasil"]];
+  return (
+    <Section className="border-t border-border">
+      <Eyebrow>Bug bounty</Eyebrow>
+      <H2>Empresas que pagam por localizar falhas.</H2>
+      <p className="mt-4 max-w-xl text-muted-foreground">
+        Organizações com programas públicos de recompensa por vulnerabilidades. Relatórios da Descrypted são exportados no formato exigido por essas plataformas: passos de reprodução, evidência, impacto e CVSS.
+      </p>
+      <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <Card className="p-6 lg:col-span-2">
+          <p className="text-xs text-subtle">Programas públicos</p>
+          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {companies.map((c) => <span key={c} className="text-lg font-semibold tracking-tight text-muted-foreground">{c}</span>)}
+          </div>
+        </Card>
+        <Card className="p-6">
+          <p className="text-xs text-subtle">Plataformas compatíveis</p>
+          <ul className="mt-4 divide-y divide-border text-sm">
+            {platforms.map(([p, r]) => (
+              <li key={p} className="flex items-center justify-between py-2"><span>{p}</span><span className="font-mono text-xs text-subtle">{r}</span></li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+      <p className="mt-6 text-xs text-subtle">Participe apenas dentro do escopo e das regras publicadas por cada programa.</p>
+    </Section>
+  );
+}
+
 function Blog() {
   const posts = [
     ["Pesquisa", "Encadeando IDORs em APIs GraphQL", "12 out 2026"],
@@ -444,6 +475,7 @@ function Index() {
         <Features />
         <Enterprise />
         <Ethics />
+        <BugBounty />
         <Blog />
         <CTA />
       </main>
