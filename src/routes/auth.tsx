@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { btnSolid, inputCls } from "@/components/app/ui";
+import logo from "@/assets/descrypted-logo.png.asset.json";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -61,7 +62,7 @@ function AuthPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-5">
-      <Link to="/" className="mb-10 text-lg font-bold tracking-tight">Descrypted</Link>
+      <Link to="/" className="mb-10 inline-flex h-7 items-center"><img src={logo.url} alt="Descrypted" className="h-7 w-auto" /></Link>
       <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6">
         <h1 className="text-xl font-bold">{title}</h1>
         {sent ? (

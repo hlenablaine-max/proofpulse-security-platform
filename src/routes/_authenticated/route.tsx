@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/
 import { useQueryClient } from "@tanstack/react-query";
 import { LayoutDashboard, Crosshair, Bug, GitPullRequest, Radar, Settings, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import logo from "@/assets/descrypted-logo.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -36,7 +37,7 @@ function AppLayout() {
     <div className="flex min-h-screen flex-col md:flex-row">
       <aside className="border-b border-border md:sticky md:top-0 md:flex md:h-screen md:w-60 md:flex-col md:border-b-0 md:border-r">
         <div className="flex h-14 items-center justify-between px-5">
-          <Link to="/dashboard" className="font-bold tracking-tight">Descrypted</Link>
+          <Link to="/dashboard" className="inline-flex h-5 items-center"><img src={logo.url} alt="Descrypted" className="h-5 w-auto" /></Link>
           <button onClick={signOut} className="text-muted-foreground md:hidden" aria-label="Sair"><LogOut size={16} /></button>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:pb-0">
