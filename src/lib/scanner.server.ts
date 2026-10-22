@@ -144,7 +144,8 @@ export async function runLightScan(inputTarget: string): Promise<{ findings: Sca
   log.push(`GET ${url}/ → ${main.status}`);
 
   for (const s of SEC_HEADERS) {
-    if (s.name === "content-security-policy" && !h.get(s.name) && !h.get("content-security-policy-report-only") || (s.name !== "content-security-policy" && !h.get(s.name))) {
+    const present = s.name === "content-security-policy" ? h.get(s.name) || h.get("content-security-policy-report-only") : h.get(s.name);
+    if (!present) {
       findings.push({ title: s.title, severity: s.sev, cvss: s.cvss, cwe: s.cwe, location: `${url}/ (header de resposta)`,
         impact: s.impact, proof: `GET ${url}/\n→ ${main.status}, sem o header ${s.name}`, fix_diff: s.fix });
     }
