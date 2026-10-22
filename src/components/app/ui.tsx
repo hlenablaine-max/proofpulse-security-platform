@@ -18,6 +18,8 @@ export const statusMap: Record<string, [Sev, string]> = {
   completed: ["success", "Concluído"],
   running: ["running", "Rodando"],
   scheduled: ["pending", "Agendado"],
+  queued: ["pending", "Na fila"],
+  failed: ["critical", "Falhou"],
   open: ["high", "Aberto"],
   fixed: ["success", "Corrigido"],
   approved: ["success", "Aprovado"],

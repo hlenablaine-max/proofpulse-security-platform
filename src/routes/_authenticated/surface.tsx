@@ -31,6 +31,7 @@ function Surface() {
                 <td className="px-5 py-3 text-muted-foreground">{ago(a.last_seen)}</td>
               </tr>
             ))}
+            {data.length === 0 && <tr><td colSpan={5} className="px-5 py-10 text-center text-muted-foreground">Os ativos aparecem aqui após o primeiro pentest.</td></tr>}
           </tbody>
         </table>
       </Panel>

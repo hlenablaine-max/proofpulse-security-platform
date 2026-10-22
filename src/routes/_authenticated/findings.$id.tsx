@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle2, GitPullRequest, Wand2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Badge, Diff, Panel, Status, btnSolid, sevLabel, type Sev } from "@/components/app/ui";
+import { Badge, Diff, Panel, Status, btnOutline, btnSolid, sevLabel, type Sev } from "@/components/app/ui";
 
 export const Route = createFileRoute("/_authenticated/findings/$id")({
   head: () => ({ meta: [{ title: "Achado — Descrypted" }] }),
@@ -14,21 +13,20 @@ export const Route = createFileRoute("/_authenticated/findings/$id")({
 function Finding() {
   const { id } = Route.useParams();
   const qc = useQueryClient();
-  const [busy, setBusy] = useState(false);
   const { data: f } = useQuery({
     queryKey: ["finding", id],
     queryFn: async () => (await supabase.from("findings").select("*").eq("id", id).single()).data,
   });
 
-  async function autofix() {
-    setBusy(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    const pr = 500 + Math.floor(Math.random() * 400);
-    const { error } = await supabase.from("findings").update({ status: "fixed", pr_number: pr }).eq("id", id);
-    setBusy(false);
+  async function markFixed() {
+    const { error } = await supabase.from("findings").update({ status: "fixed" }).eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success(`PR #${pr} aberto com a correção.`);
+    toast.success("Marcado como corrigido.");
     qc.invalidateQueries();
+  }
+  async function copyFix() {
+    await navigator.clipboard.writeText(f?.fix_diff ?? "");
+    toast.success("Correção copiada.");
   }
 
   if (!f) return <p className="text-sm text-muted-foreground">Carregando…</p>;
@@ -53,16 +51,14 @@ function Finding() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4">
           {f.status === "fixed" ? (
-            <>
-              <span className="flex items-center gap-2 text-sm"><CheckCircle2 size={16} className="text-success" />Verificação confirmada — vulnerabilidade não é mais explorável</span>
-              <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground"><GitPullRequest size={14} />PR #{f.pr_number} pronto pra merge</span>
-            </>
+            <span className="flex items-center gap-2 text-sm"><CheckCircle2 size={16} className="text-success" />Marcado como corrigido. Execute um novo pentest para confirmar.</span>
           ) : (
-            <>
-              <span className="text-sm text-muted-foreground">Gera um PR com a correção e re-executa a exploração para validar.</span>
-              <button disabled={busy} onClick={autofix} className={btnSolid}><Wand2 size={14} />{busy ? "Gerando PR…" : "Corrigir automaticamente"}</button>
-            </>
+            <span className="text-sm text-muted-foreground">Aplique a correção e execute um novo pentest para confirmar.</span>
           )}
+          <span className="flex gap-2">
+            {f.fix_diff && <button onClick={copyFix} className={btnOutline}>Copiar correção</button>}
+            {f.status !== "fixed" && <button onClick={markFixed} className={btnSolid}>Marcar como corrigido</button>}
+          </span>
         </div>
       </Panel>
     </div>
