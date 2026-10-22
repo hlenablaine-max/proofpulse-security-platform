@@ -9,4 +9,5 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Pentest engines: the "light" scanner runs in-app (src/lib/scanner.server.ts, passive GET-only, SSRF-guarded); "strix" jobs are queued in the database and executed by an external Docker worker (worker/) via /api/public/worker/* authenticated with WORKER_API_KEY — Strix needs Docker and long runtimes that Workers cannot provide.
+- Pentest engines run natively inside the app via `runScan` (src/lib/scanner.functions.ts): "light" = deterministic GET-only checks (scanner.server.ts); "deep" = baseline plus a bounded AI agent (agent.server.ts) whose tools are scope-locked GET/HEAD/DNS and whose findings must cite ledger evidence — no external worker or third-party scanner, because Workers cannot host sandboxes and the product must own its engine.
+- Scan execution is claimed atomically (queued → running) inside the server function so a pentest runs once.

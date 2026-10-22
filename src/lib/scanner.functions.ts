@@ -1,6 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { runLightScan } from "./scanner.server";
+import { runLightScan, type ScanFinding } from "./scanner.server";
+
+function aiErrorMessage(e: unknown): string {
+  const status = (e as { statusCode?: number })?.statusCode;
+  if (status === 402) return "Créditos de IA insuficientes para executar o agente.";
+  if (status === 429) return "Limite de requisições de IA atingido; tente novamente em instantes.";
+  if (e instanceof Error && /abort|timeout/i.test(e.name + e.message)) return "O agente excedeu o tempo máximo.";
+  return "A análise de IA não pôde ser concluída.";
+}
 
 export const runScan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -10,35 +18,66 @@ export const runScan = createServerFn({ method: "POST" })
   })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: p, error } = await supabase.from("pentests").select("*").eq("id", data.pentestId).maybeSingle();
-    if (error || !p) return { ok: false as const, error: "Pentest não encontrado." };
-    if (p.engine !== "light") return { ok: false as const, error: "Este pentest usa o worker Strix." };
-    if (!p.authorized_at) return { ok: false as const, error: "Autorização não confirmada." };
-    if (p.status !== "running") return { ok: false as const, error: "Pentest já foi executado." };
+    // Claim atômico: só uma execução move queued -> running.
+    const { data: p } = await supabase
+      .from("pentests")
+      .update({ status: "running", started_at: new Date().toISOString() })
+      .eq("id", data.pentestId).eq("status", "queued").not("authorized_at", "is", null)
+      .in("engine", ["light", "deep"]).in("kind", ["web", "api"])
+      .select("*").maybeSingle();
+    if (!p) return { ok: false as const, error: "Pentest não encontrado, sem autorização ou já executado." };
+
+    const fail = async (msg: string) => {
+      await supabase.from("pentests").update({ status: "failed", error: msg, finished_at: new Date().toISOString() }).eq("id", p.id);
+      return { ok: false as const, error: msg };
+    };
 
     try {
-      const { findings, host } = await runLightScan(p.target);
-      if (findings.length) {
-        const { error: fe } = await supabase.from("findings").insert(
-          findings.map((f) => ({ ...f, user_id: userId, pentest_id: p.id, source: "light" })),
-        );
+      const { findings: baseline, host } = await runLightScan(p.target);
+      let agentFindings: ScanFinding[] = [];
+      let report: string | null = null;
+      let notice: string | null = null;
+
+      if (p.engine === "deep") {
+        const apiKey = process.env["LOVABLE_API_KEY"];
+        if (!apiKey) notice = "Agente de IA não configurado.";
+        else {
+          try {
+            const { runAgent } = await import("./agent.server");
+            const r = await runAgent(p.target, baseline, { apiKey });
+            agentFindings = r.findings;
+            report = r.report;
+          } catch (e) {
+            console.error("agent failed", e);
+            notice = aiErrorMessage(e);
+          }
+        }
+        if (notice) report = `## Relatório parcial\n\nA linha de base foi executada, mas a etapa do agente falhou: ${notice}\n\nOs achados abaixo vêm apenas das verificações básicas.`;
+      }
+
+      const rows = [
+        ...baseline.map((f) => ({ ...f, source: "light" })),
+        ...agentFindings.map((f) => ({ ...f, source: "deep" })),
+      ].map((f) => ({ ...f, user_id: userId, pentest_id: p.id }));
+      if (rows.length) {
+        const { error: fe } = await supabase.from("findings").insert(rows);
         if (fe) throw new Error(fe.message);
       }
-      const n = (s: string) => findings.filter((f) => f.severity === s).length;
+      const all = [...baseline, ...agentFindings];
+      const n = (s: string) => all.filter((f) => f.severity === s).length;
       const worst = n("critical") ? "critical" : n("high") ? "high" : n("medium") ? "medium" : n("low") ? "low" : "none";
       await supabase.from("assets").delete().eq("host", host);
       await supabase.from("assets").insert({
         user_id: userId, host, kind: p.kind === "api" ? "API" : "Web", exposure: worst,
-        note: `${findings.length} achado(s) na última verificação`,
+        note: `${all.length} achado(s) na última verificação`,
       });
-      await supabase.from("pentests").update({
+      const { error: ue } = await supabase.from("pentests").update({
         status: "completed", critical: n("critical"), high: n("high"), medium: n("medium"), low: n("low"),
-        finished_at: new Date().toISOString(),
+        report, error: notice, finished_at: new Date().toISOString(),
       }).eq("id", p.id);
-      return { ok: true as const, total: findings.length };
+      if (ue) throw new Error(ue.message);
+      return { ok: true as const, total: all.length, notice };
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Falha na execução";
-      await supabase.from("pentests").update({ status: "failed", error: msg, finished_at: new Date().toISOString() }).eq("id", p.id);
-      return { ok: false as const, error: msg };
+      return fail(e instanceof Error ? e.message : "Falha na execução");
     }
   });

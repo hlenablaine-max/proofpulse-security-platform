@@ -33,7 +33,7 @@ export function normalizeTarget(input: string): { host: string; url: string } {
   return { host, url: `https://${host}${u.port && u.port !== "443" ? ":" + u.port : ""}` };
 }
 
-function isPrivateIp(ip: string): boolean {
+export function isPrivateIp(ip: string): boolean {
   if (/^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
     const [a = 0, b = 0] = ip.split(".").map(Number);
     return (
@@ -49,7 +49,7 @@ function isPrivateIp(ip: string): boolean {
   return false;
 }
 
-async function doh(name: string, type: string): Promise<string[]> {
+export async function doh(name: string, type: string): Promise<string[]> {
   try {
     const r = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`, {
       headers: { accept: "application/dns-json" },
@@ -62,7 +62,7 @@ async function doh(name: string, type: string): Promise<string[]> {
   }
 }
 
-async function get(url: string, init: RequestInit = {}) {
+export async function get(url: string, init: RequestInit = {}) {
   return fetch(url, {
     redirect: "manual",
     ...init,
@@ -198,7 +198,7 @@ export async function runLightScan(inputTarget: string): Promise<{ findings: Sca
     const r = await get(url + "/", { headers: { origin: "https://origem-nao-confiavel.example" } });
     const acao = r.headers.get("access-control-allow-origin");
     const acac = r.headers.get("access-control-allow-credentials");
-    if (acao && (acao === "https://origem-nao-confiavel.example" || acao === "*") && acac === "true") {
+    if (acao === "https://origem-nao-confiavel.example" && acac === "true") {
       findings.push({ title: "CORS permissivo com credenciais", severity: "high", cvss: 8.1, cwe: "CWE-942", location: `${url}/`,
         impact: "Qualquer site pode ler respostas autenticadas em nome do usuário.",
         proof: `Origin: https://origem-nao-confiavel.example\n→ Access-Control-Allow-Origin: ${acao}\n→ Access-Control-Allow-Credentials: true`,
