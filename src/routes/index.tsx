@@ -3,6 +3,7 @@ import {
   Globe, GitPullRequest, Cloud, ShieldCheck, Ban, Radar, Zap, Brain, RefreshCw,
   Activity, CheckCircle2, Wrench, Server, Network, Lock, Headphones, Scale, ArrowRight,
 } from "lucide-react";
+import logo from "@/assets/descrypted-logo.png.asset.json";
 import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
@@ -49,7 +50,7 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-        <a href="#" className="text-base font-bold tracking-tight">Descrypted</a>
+        <a href="#" className="inline-flex h-6 items-center"><img src={logo.url} alt="Descrypted" className="h-6 w-auto" /></a>
         <nav className="hidden gap-7 text-sm text-muted-foreground md:flex">
           <a href="#produto" className="hover:text-foreground">Produto</a>
           <a href="#enterprise" className="hover:text-foreground">Enterprise</a>
@@ -442,7 +443,7 @@ function Footer() {
     <footer className="border-t border-border">
       <div className="mx-auto max-w-6xl px-5 py-16">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-5">
-          <div><p className="font-bold">Descrypted</p><p className="mt-2 text-sm text-muted-foreground">Pentest autônomo contínuo.</p></div>
+          <div className="flex flex-col gap-3"><img src={logo.url} alt="Descrypted" className="h-5 w-auto" /><p className="text-sm text-muted-foreground">Pentest autônomo contínuo.</p></div>
           {cols.map(([t, ls]) => (
             <div key={t}>
               <p className="text-sm font-medium">{t}</p>
