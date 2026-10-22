@@ -14,7 +14,194 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assets: {
+        Row: {
+          exposure: string
+          host: string
+          id: string
+          kind: string
+          last_seen: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          exposure?: string
+          host: string
+          id?: string
+          kind: string
+          last_seen?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          exposure?: string
+          host?: string
+          id?: string
+          kind?: string
+          last_seen?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      findings: {
+        Row: {
+          created_at: string
+          cvss: number
+          cwe: string | null
+          fix_diff: string | null
+          id: string
+          impact: string | null
+          location: string | null
+          pentest_id: string | null
+          pr_number: number | null
+          proof: string | null
+          severity: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cvss?: number
+          cwe?: string | null
+          fix_diff?: string | null
+          id?: string
+          impact?: string | null
+          location?: string | null
+          pentest_id?: string | null
+          pr_number?: number | null
+          proof?: string | null
+          severity: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cvss?: number
+          cwe?: string | null
+          fix_diff?: string | null
+          id?: string
+          impact?: string | null
+          location?: string | null
+          pentest_id?: string | null
+          pr_number?: number | null
+          proof?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "findings_pentest_id_fkey"
+            columns: ["pentest_id"]
+            isOneToOne: false
+            referencedRelation: "pentests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pentests: {
+        Row: {
+          created_at: string
+          critical: number
+          high: number
+          id: string
+          kind: string
+          low: number
+          medium: number
+          schedule: string | null
+          status: string
+          target: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          critical?: number
+          high?: number
+          id?: string
+          kind?: string
+          low?: number
+          medium?: number
+          schedule?: string | null
+          status?: string
+          target: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          critical?: number
+          high?: number
+          id?: string
+          kind?: string
+          low?: number
+          medium?: number
+          schedule?: string | null
+          status?: string
+          target?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pr_reviews: {
+        Row: {
+          author: string | null
+          created_at: string
+          id: string
+          issues: number
+          number: number
+          repo: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          author?: string | null
+          created_at?: string
+          id?: string
+          issues?: number
+          number: number
+          repo: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          author?: string | null
+          created_at?: string
+          id?: string
+          issues?: number
+          number?: number
+          repo?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
