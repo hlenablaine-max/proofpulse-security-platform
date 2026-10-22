@@ -14,6 +14,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedFindingsRouteImport } from './routes/_authenticated/findings'
+import { Route as AuthenticatedPentestsRouteImport } from './routes/_authenticated/pentests'
+import { Route as AuthenticatedPullRequestsRouteImport } from './routes/_authenticated/pull-requests'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSurfaceRouteImport } from './routes/_authenticated/surface'
+import { Route as AuthenticatedFindingsIdRouteImport } from './routes/_authenticated/findings.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +45,61 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFindingsRoute = AuthenticatedFindingsRouteImport.update({
+  id: '/findings',
+  path: '/findings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPentestsRoute = AuthenticatedPentestsRouteImport.update({
+  id: '/pentests',
+  path: '/pentests',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPullRequestsRoute =
+  AuthenticatedPullRequestsRouteImport.update({
+    id: '/pull-requests',
+    path: '/pull-requests',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSurfaceRoute = AuthenticatedSurfaceRouteImport.update({
+  id: '/surface',
+  path: '/surface',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFindingsIdRoute = AuthenticatedFindingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedFindingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/findings': typeof AuthenticatedFindingsRouteWithChildren
+  '/pentests': typeof AuthenticatedPentestsRoute
+  '/pull-requests': typeof AuthenticatedPullRequestsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/surface': typeof AuthenticatedSurfaceRoute
+  '/findings/$id': typeof AuthenticatedFindingsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/findings': typeof AuthenticatedFindingsRouteWithChildren
+  '/pentests': typeof AuthenticatedPentestsRoute
+  '/pull-requests': typeof AuthenticatedPullRequestsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/surface': typeof AuthenticatedSurfaceRoute
+  '/findings/$id': typeof AuthenticatedFindingsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +108,38 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/findings': typeof AuthenticatedFindingsRouteWithChildren
+  '/_authenticated/pentests': typeof AuthenticatedPentestsRoute
+  '/_authenticated/pull-requests': typeof AuthenticatedPullRequestsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/surface': typeof AuthenticatedSurfaceRoute
+  '/_authenticated/findings/$id': typeof AuthenticatedFindingsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/findings'
+    | '/pentests'
+    | '/pull-requests'
+    | '/settings'
+    | '/surface'
+    | '/findings/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/findings'
+    | '/pentests'
+    | '/pull-requests'
+    | '/settings'
+    | '/surface'
+    | '/findings/$id'
   id:
     | '__root__'
     | '/'
@@ -72,6 +147,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/dashboard'
+    | '/_authenticated/findings'
+    | '/_authenticated/pentests'
+    | '/_authenticated/pull-requests'
+    | '/_authenticated/settings'
+    | '/_authenticated/surface'
+    | '/_authenticated/findings/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +199,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/findings': {
+      id: '/_authenticated/findings'
+      path: '/findings'
+      fullPath: '/findings'
+      preLoaderRoute: typeof AuthenticatedFindingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pentests': {
+      id: '/_authenticated/pentests'
+      path: '/pentests'
+      fullPath: '/pentests'
+      preLoaderRoute: typeof AuthenticatedPentestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pull-requests': {
+      id: '/_authenticated/pull-requests'
+      path: '/pull-requests'
+      fullPath: '/pull-requests'
+      preLoaderRoute: typeof AuthenticatedPullRequestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/surface': {
+      id: '/_authenticated/surface'
+      path: '/surface'
+      fullPath: '/surface'
+      preLoaderRoute: typeof AuthenticatedSurfaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/findings/$id': {
+      id: '/_authenticated/findings/$id'
+      path: '/$id'
+      fullPath: '/findings/$id'
+      preLoaderRoute: typeof AuthenticatedFindingsIdRouteImport
+      parentRoute: typeof AuthenticatedFindingsRoute
+    }
   }
 }
 
+interface AuthenticatedFindingsRouteChildren {
+  AuthenticatedFindingsIdRoute: typeof AuthenticatedFindingsIdRoute
+}
+
+const AuthenticatedFindingsRouteChildren: AuthenticatedFindingsRouteChildren = {
+  AuthenticatedFindingsIdRoute: AuthenticatedFindingsIdRoute,
+}
+
+const AuthenticatedFindingsRouteWithChildren =
+  AuthenticatedFindingsRoute._addFileChildren(
+    AuthenticatedFindingsRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFindingsRoute: typeof AuthenticatedFindingsRouteWithChildren
+  AuthenticatedPentestsRoute: typeof AuthenticatedPentestsRoute
+  AuthenticatedPullRequestsRoute: typeof AuthenticatedPullRequestsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSurfaceRoute: typeof AuthenticatedSurfaceRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFindingsRoute: AuthenticatedFindingsRouteWithChildren,
+  AuthenticatedPentestsRoute: AuthenticatedPentestsRoute,
+  AuthenticatedPullRequestsRoute: AuthenticatedPullRequestsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSurfaceRoute: AuthenticatedSurfaceRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
