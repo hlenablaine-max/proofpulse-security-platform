@@ -36,7 +36,7 @@ function Finding() {
       <Panel className="overflow-hidden">
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-4">
           <div>
-            <p className="font-mono text-xs text-subtle">{f.cwe}</p>
+            <p className="font-mono text-xs text-subtle">{f.cwe} · {f.source === "deep" ? "Agente Descrypted — evidência conferida no registro de requisições" : "Verificação básica — observação de configuração"}</p>
             <h1 className="mt-1 text-lg font-semibold">{f.title}</h1>
           </div>
           <div className="flex gap-2"><Badge sev={f.severity as Sev}>{sevLabel[f.severity]}</Badge><Badge sev={f.severity as Sev}>CVSS {f.cvss}</Badge><Status value={f.status} /></div>
