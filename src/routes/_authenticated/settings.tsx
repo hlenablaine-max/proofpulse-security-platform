@@ -32,7 +32,7 @@ function Settings() {
     const form = e.currentTarget;
     const f = new FormData(form);
     const { error } = await supabase.auth.updateUser({ password: String(f.get("password")), current_password: String(f.get("current")) } as never);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Senha alterada.");
     form.reset();
   }

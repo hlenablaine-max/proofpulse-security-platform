@@ -26,7 +26,7 @@ function Finding() {
     const pr = 500 + Math.floor(Math.random() * 400);
     const { error } = await supabase.from("findings").update({ status: "fixed", pr_number: pr }).eq("id", id);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`PR #${pr} aberto com a correção.`);
     qc.invalidateQueries();
   }
