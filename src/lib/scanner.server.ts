@@ -35,7 +35,7 @@ export function normalizeTarget(input: string): { host: string; url: string } {
 
 function isPrivateIp(ip: string): boolean {
   if (/^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
-    const [a, b] = ip.split(".").map(Number);
+    const [a = 0, b = 0] = ip.split(".").map(Number);
     return (
       a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) ||
       (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) ||
@@ -236,7 +236,7 @@ export async function runLightScan(inputTarget: string): Promise<{ findings: Sca
   // E-mail: SPF / DMARC no domínio base
   const parts = host.split(".");
   const second = ["com", "net", "org", "gov", "edu"];
-  const base = parts.length > 2 && second.includes(parts[parts.length - 2]) ? parts.slice(-3).join(".") : parts.slice(-2).join(".");
+  const base = parts.length > 2 && second.includes(parts[parts.length - 2] ?? "") ? parts.slice(-3).join(".") : parts.slice(-2).join(".");
   const [txt, dmarc] = await Promise.all([doh(base, "TXT"), doh(`_dmarc.${base}`, "TXT")]);
   if (!dmarc.some((t) => /v=DMARC1/i.test(t))) {
     findings.push({ title: "DMARC não configurado", severity: "medium", cvss: 5.3, cwe: "CWE-290", location: `_dmarc.${base}`,
