@@ -33,7 +33,7 @@ export function normalizeTarget(input: string): { host: string; url: string } {
   return { host, url: `https://${host}${u.port && u.port !== "443" ? ":" + u.port : ""}` };
 }
 
-function isPrivateIp(ip: string): boolean {
+export function isPrivateIp(ip: string): boolean {
   if (/^\d+\.\d+\.\d+\.\d+$/.test(ip)) {
     const [a = 0, b = 0] = ip.split(".").map(Number);
     return (
@@ -49,7 +49,7 @@ function isPrivateIp(ip: string): boolean {
   return false;
 }
 
-async function doh(name: string, type: string): Promise<string[]> {
+export async function doh(name: string, type: string): Promise<string[]> {
   try {
     const r = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`, {
       headers: { accept: "application/dns-json" },
@@ -62,7 +62,7 @@ async function doh(name: string, type: string): Promise<string[]> {
   }
 }
 
-async function get(url: string, init: RequestInit = {}) {
+export async function get(url: string, init: RequestInit = {}) {
   return fetch(url, {
     redirect: "manual",
     ...init,
