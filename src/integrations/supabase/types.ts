@@ -57,6 +57,7 @@ export type Database = {
           pr_number: number | null
           proof: string | null
           severity: string
+          source: string
           status: string
           title: string
           user_id: string
@@ -73,6 +74,7 @@ export type Database = {
           pr_number?: number | null
           proof?: string | null
           severity: string
+          source?: string
           status?: string
           title: string
           user_id: string
@@ -89,6 +91,7 @@ export type Database = {
           pr_number?: number | null
           proof?: string | null
           severity?: string
+          source?: string
           status?: string
           title?: string
           user_id?: string
@@ -105,40 +108,58 @@ export type Database = {
       }
       pentests: {
         Row: {
+          authorized_at: string | null
           created_at: string
           critical: number
+          engine: string
+          error: string | null
+          finished_at: string | null
           high: number
           id: string
           kind: string
           low: number
           medium: number
+          report: string | null
           schedule: string | null
+          started_at: string | null
           status: string
           target: string
           user_id: string
         }
         Insert: {
+          authorized_at?: string | null
           created_at?: string
           critical?: number
+          engine?: string
+          error?: string | null
+          finished_at?: string | null
           high?: number
           id?: string
           kind?: string
           low?: number
           medium?: number
+          report?: string | null
           schedule?: string | null
+          started_at?: string | null
           status?: string
           target: string
           user_id: string
         }
         Update: {
+          authorized_at?: string | null
           created_at?: string
           critical?: number
+          engine?: string
+          error?: string | null
+          finished_at?: string | null
           high?: number
           id?: string
           kind?: string
           low?: number
           medium?: number
+          report?: string | null
           schedule?: string | null
+          started_at?: string | null
           status?: string
           target?: string
           user_id?: string
