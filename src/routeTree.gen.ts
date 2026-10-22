@@ -20,8 +20,6 @@ import { Route as AuthenticatedPullRequestsRouteImport } from './routes/_authent
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedSurfaceRouteImport } from './routes/_authenticated/surface'
 import { Route as AuthenticatedFindingsIdRouteImport } from './routes/_authenticated/findings.$id'
-import { Route as ApiPublicWorkerClaimRouteImport } from './routes/api/public/worker.claim'
-import { Route as ApiPublicWorkerResultRouteImport } from './routes/api/public/worker.result'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -78,16 +76,6 @@ const AuthenticatedFindingsIdRoute = AuthenticatedFindingsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthenticatedFindingsRoute,
 } as any)
-const ApiPublicWorkerClaimRoute = ApiPublicWorkerClaimRouteImport.update({
-  id: '/api/public/worker/claim',
-  path: '/api/public/worker/claim',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicWorkerResultRoute = ApiPublicWorkerResultRouteImport.update({
-  id: '/api/public/worker/result',
-  path: '/api/public/worker/result',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,8 +88,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/surface': typeof AuthenticatedSurfaceRoute
   '/findings/$id': typeof AuthenticatedFindingsIdRoute
-  '/api/public/worker/claim': typeof ApiPublicWorkerClaimRoute
-  '/api/public/worker/result': typeof ApiPublicWorkerResultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -114,8 +100,6 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/surface': typeof AuthenticatedSurfaceRoute
   '/findings/$id': typeof AuthenticatedFindingsIdRoute
-  '/api/public/worker/claim': typeof ApiPublicWorkerClaimRoute
-  '/api/public/worker/result': typeof ApiPublicWorkerResultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -130,8 +114,6 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/surface': typeof AuthenticatedSurfaceRoute
   '/_authenticated/findings/$id': typeof AuthenticatedFindingsIdRoute
-  '/api/public/worker/claim': typeof ApiPublicWorkerClaimRoute
-  '/api/public/worker/result': typeof ApiPublicWorkerResultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -146,8 +128,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/surface'
     | '/findings/$id'
-    | '/api/public/worker/claim'
-    | '/api/public/worker/result'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,8 +140,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/surface'
     | '/findings/$id'
-    | '/api/public/worker/claim'
-    | '/api/public/worker/result'
   id:
     | '__root__'
     | '/'
@@ -175,8 +153,6 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/surface'
     | '/_authenticated/findings/$id'
-    | '/api/public/worker/claim'
-    | '/api/public/worker/result'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,8 +160,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ApiPublicWorkerClaimRoute: typeof ApiPublicWorkerClaimRoute
-  ApiPublicWorkerResultRoute: typeof ApiPublicWorkerResultRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -267,20 +241,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFindingsIdRouteImport
       parentRoute: typeof AuthenticatedFindingsRoute
     }
-    '/api/public/worker/claim': {
-      id: '/api/public/worker/claim'
-      path: '/api/public/worker/claim'
-      fullPath: '/api/public/worker/claim'
-      preLoaderRoute: typeof ApiPublicWorkerClaimRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/worker/result': {
-      id: '/api/public/worker/result'
-      path: '/api/public/worker/result'
-      fullPath: '/api/public/worker/result'
-      preLoaderRoute: typeof ApiPublicWorkerResultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -323,8 +283,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ApiPublicWorkerClaimRoute: ApiPublicWorkerClaimRoute,
-  ApiPublicWorkerResultRoute: ApiPublicWorkerResultRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

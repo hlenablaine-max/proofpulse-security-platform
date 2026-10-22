@@ -198,7 +198,7 @@ export async function runLightScan(inputTarget: string): Promise<{ findings: Sca
     const r = await get(url + "/", { headers: { origin: "https://origem-nao-confiavel.example" } });
     const acao = r.headers.get("access-control-allow-origin");
     const acac = r.headers.get("access-control-allow-credentials");
-    if (acao && (acao === "https://origem-nao-confiavel.example" || acao === "*") && acac === "true") {
+    if (acao === "https://origem-nao-confiavel.example" && acac === "true") {
       findings.push({ title: "CORS permissivo com credenciais", severity: "high", cvss: 8.1, cwe: "CWE-942", location: `${url}/`,
         impact: "Qualquer site pode ler respostas autenticadas em nome do usuário.",
         proof: `Origin: https://origem-nao-confiavel.example\n→ Access-Control-Allow-Origin: ${acao}\n→ Access-Control-Allow-Credentials: true`,
